@@ -127,5 +127,5 @@ elif section == 'Interaction Effects':
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
-    st.altair_chart(interaction_plot, use_container_width=True)
+    st.altair_chart(interaction_plot, use_container_width=True, use_container_height=True)
 
