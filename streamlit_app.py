@@ -118,7 +118,7 @@ elif section == 'Interaction Effects':
     st.write('Explore the interaction between Age and Gender on BMI.')
 
     interaction_plot = alt.Chart(df).mark_circle().encode(
-        x='Age:Q',
+        x=alt.X('Age:Q', scale=alt.Scale(domain=[10, 82])),
         y='BMI:Q',
         color='Gender:N',
         size='Income Ratio:Q',
