@@ -12,6 +12,8 @@ st.sidebar.title('Analysis Dashboard')
 section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison', 'Group-wise BMI Trend over Age', 'Regression Analysis',
                                                'Interaction Effects'])
 
+st.set_page_config(layout="wide")
+
 # Page 1: Home
 if section == 'Home':
     st.title('BMI and Health Factors Dashboard')
@@ -113,7 +115,6 @@ elif section == 'Regression Analysis':
 
 # Page 5: Interaction Effects
 elif section == 'Interaction Effects':
-    st.set_page_config(layout="wide")
     st.title('Interaction Effects')
     st.write('Explore the interaction between Age and Gender on BMI.')
 
