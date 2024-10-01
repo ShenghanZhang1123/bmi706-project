@@ -127,11 +127,21 @@ elif section == 'Interaction Effects':
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
+    # Multiselect to choose which specific categories to display
+    selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique(),
+                                         default=df[category].unique()[0])
+
+    # Filter the dataframe based on selected categories
+    if selected_categories:
+        filtered_df = df[df[category].isin(selected_categories)]
+    else:
+        filtered_df = df  # Show all if none are selected
+
     diff = df['Age'].max() - df['Age'].min()
     domain_min = df['Age'].min() - diff * 0.02
     domain_max = df['Age'].max() + diff * 0.02
 
-    interaction_plot = alt.Chart(df).mark_circle().encode(
+    interaction_plot = alt.Chart(filtered_df).mark_circle().encode(
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10')),
