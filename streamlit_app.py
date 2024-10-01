@@ -73,7 +73,7 @@ elif section == 'Group-wise BMI Trend over Age':
     line_chart = alt.Chart(df).mark_line().encode(
         x='Age',  # Age on x-axis
         y='mean(BMI)',
-        color=category + ':O'  # Color lines by Gender
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Color lines by Gender
     ).properties(
         title=f'BMI Trend over Age by {category}'
     ).interactive()
