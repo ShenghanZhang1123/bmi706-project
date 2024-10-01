@@ -45,7 +45,7 @@ elif section == 'Correlation Analysis':
     st.altair_chart(scatter_chart, use_container_width=True)
 
 # Page 3: Group-wise BMI Analysis (Categorical)
-elif section == 'Group-wise BMI':
+elif section == 'Group-wise BMI Comparison':
     st.title('BMI by Categorical Variables')
     st.write('Compare BMI across different categories (Gender, Race, Diabetes).')
 
@@ -60,6 +60,16 @@ elif section == 'Group-wise BMI':
     )
 
     st.altair_chart(boxplot, use_container_width=True)
+
+elif section == 'Group-wise BMI Trend over Age':
+    category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
+
+    # Group by Gender (assuming the column for Gender is 'RIAGENDR')
+    line_chart = alt.Chart(df).mark_line().encode(
+        x='Age',  # Age on x-axis
+        y='BMI',
+        color=category  # Color lines by Gender
+    ).interactive()
 
 # Page 4: Regression Analysis
 elif section == 'Regression Analysis':
