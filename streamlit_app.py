@@ -70,7 +70,7 @@ elif section == 'Group-wise BMI Trend over Age':
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
     # Multiselect to choose which specific categories to display
-    selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
+    selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique(), default=df[category].unique()[0])
 
     # Filter the dataframe based on selected categories
     if selected_categories:
