@@ -21,7 +21,7 @@ if section == 'Home':
     st.write('Data Preview:')
     #st.write(df.head())
 
-    st.dataframe(df.head(15), width=1000, height=500)
+    st.dataframe(df.head(15), height=500, use_container_width=True)
 
 # Page 2: Correlation Analysis
 elif section == 'Correlation Analysis':
