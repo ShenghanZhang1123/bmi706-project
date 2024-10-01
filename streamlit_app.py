@@ -104,11 +104,11 @@ elif section == 'Regression Analysis':
     regression_chart = alt.Chart(df).mark_point().encode(
         x=alt.X(variable, type='quantitative'),
         y=alt.Y('BMI', type='quantitative'),
-    ).properties(height=1000).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
+    ).properties(height=500).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
         y='BMI',
         color=alt.value('red')
-    ).properties(height=1000).interactive()
+    ).properties(height=500).interactive()
 
     st.altair_chart(regression_chart, use_container_width=True)
 
@@ -124,9 +124,9 @@ elif section == 'Interaction Effects':
         size='Income Ratio:Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
-        height=1000,
+        height=500,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
-    st.altair_chart(interaction_plot, use_container_width=False)
+    st.altair_chart(interaction_plot, use_container_width=True)
 
