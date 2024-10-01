@@ -102,17 +102,17 @@ elif section == 'Regression Analysis':
     variable = st.selectbox('Select variable for regression plot:', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
 
     diff = df[variable].max() - df[variable].min()
-    domain_min = df[variable].min() - diff * 0.05
-    domain_max = df[variable].max() + diff * 0.05
+    domain_min = df[variable].min() - diff * 0.02
+    domain_max = df[variable].max() + diff * 0.02
 
     regression_chart = alt.Chart(df).mark_point().encode(
         x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
         y=alt.Y('BMI', type='quantitative'),
-    ).properties(height=500).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
+    ).properties(height=800).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
         y='BMI',
         color=alt.value('red')
-    ).properties(height=500).interactive()
+    ).properties(height=800).interactive()
 
     st.altair_chart(regression_chart, use_container_width=True)
 
@@ -122,8 +122,8 @@ elif section == 'Interaction Effects':
     st.write('Explore the interaction between Age and Gender on BMI.')
 
     diff = df['Age'].max() - df['Age'].min()
-    domain_min = df['Age'].min() - diff * 0.05
-    domain_max = df['Age'].max() + diff * 0.05
+    domain_min = df['Age'].min() - diff * 0.02
+    domain_max = df['Age'].max() + diff * 0.02
 
     interaction_plot = alt.Chart(df).mark_circle().encode(
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
@@ -132,7 +132,7 @@ elif section == 'Interaction Effects':
         size='Income Ratio:Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
-        height=500,
+        height=800,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
