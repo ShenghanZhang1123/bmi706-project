@@ -101,8 +101,12 @@ elif section == 'Regression Analysis':
     # Regression-like scatter plot with trend line
     variable = st.selectbox('Select variable for regression plot:', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
 
+    diff = df[variable].max() - df[variable].min()
+    domain_min = df[variable].min() - diff * 0.05
+    domain_max = df[variable].max() + diff * 0.05
+
     regression_chart = alt.Chart(df).mark_point().encode(
-        x=alt.X(variable, type='quantitative'),
+        x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
         y=alt.Y('BMI', type='quantitative'),
     ).properties(height=500).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
@@ -117,8 +121,12 @@ elif section == 'Interaction Effects':
     st.title('Interaction Effects')
     st.write('Explore the interaction between Age and Gender on BMI.')
 
+    diff = df['Age'].max() - df['Age'].min()
+    domain_min = df['Age'].min() - diff * 0.05
+    domain_max = df['Age'].max() + diff * 0.05
+
     interaction_plot = alt.Chart(df).mark_circle().encode(
-        x=alt.X('Age:Q', scale=alt.Scale(domain=[10, 82])),
+        x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
         color='Gender:N',
         size='Income Ratio:Q',
