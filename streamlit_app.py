@@ -71,6 +71,8 @@ elif section == 'Group-wise BMI Trend over Age':
         color=category  # Color lines by Gender
     ).interactive()
 
+    st.altair_chart(line_chart, use_container_width=True)
+
 # Page 4: Regression Analysis
 elif section == 'Regression Analysis':
     st.title('Regression Analysis')
