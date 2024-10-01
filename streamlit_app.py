@@ -21,6 +21,8 @@ if section == 'Home':
     st.write('Data Preview:')
     st.write(df.head())
 
+    st.dataframe(df.head(), width=1000, height=500)
+
 # Page 2: Correlation Analysis
 elif section == 'Correlation Analysis':
     st.title('Correlation Analysis')
@@ -86,7 +88,7 @@ elif section == 'Group-wise BMI Trend over Age':
         y='mean(BMI)',
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
     ).properties(
-        height=600,
+        height=500,
         title=f'BMI Trend over Age by {category}'
     ).interactive()
 
