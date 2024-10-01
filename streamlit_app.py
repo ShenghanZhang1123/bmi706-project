@@ -2,25 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-
-# Load your dataset here (replace with your file path)
-@st.cache
-def load_data():
-    # Simulating a dataframe similar to the one you shared in the image
-    df = pd.DataFrame({
-        'BMI': [27.9, 23.4, 31.1, 22.7, 30.4, 35.6, 28.9],
-        'Gender': [1, 2, 1, 2, 1, 2, 1],
-        'Race': [3, 1, 4, 2, 3, 5, 3],
-        'Age': [45, 34, 67, 29, 50, 40, 52],
-        'Income Ratio': [1.5, 2.0, 4.5, 3.2, 1.9, 0.8, 2.4],
-        'LDL': [120, 130, 110, 100, 140, 150, 125],
-        'Blood Pressure': [120, 110, 130, 115, 125, 135, 128],
-        'Diabetes': [1, 2, 2, 1, 2, 1, 2]
-    })
-    return df
-
-
-df = load_data()
+df = pd.read_csv('./merged_clean_data.csv')
 
 # Sidebar for navigation
 st.sidebar.title('Analysis Dashboard')
