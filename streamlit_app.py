@@ -113,6 +113,7 @@ elif section == 'Regression Analysis':
 
 # Page 5: Interaction Effects
 elif section == 'Interaction Effects':
+    st.set_page_config(layout="wide")
     st.title('Interaction Effects')
     st.write('Explore the interaction between Age and Gender on BMI.')
 
@@ -123,8 +124,8 @@ elif section == 'Interaction Effects':
         size='Income Ratio:Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
-        width=1600,
-        height=1600,
+        width=1000,
+        height=500,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
