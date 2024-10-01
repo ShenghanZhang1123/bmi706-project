@@ -124,10 +124,8 @@ elif section == 'Interaction Effects':
         size='Income Ratio:Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
-        width=1000,
-        height=500,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
-    st.altair_chart(interaction_plot, use_container_width=False)
+    st.altair_chart(interaction_plot, use_container_width=True)
 
