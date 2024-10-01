@@ -65,6 +65,8 @@ elif section == 'Group-wise BMI Comparison':
     st.altair_chart(boxplot, use_container_width=True)
 
 elif section == 'Group-wise BMI Trend over Age':
+    st.title('BMI Trend over Age by Categorical Variables')
+    st.write('Plot the BMI Trend over Age across different categories')
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
     # Group by Gender (assuming the column for Gender is 'RIAGENDR')
