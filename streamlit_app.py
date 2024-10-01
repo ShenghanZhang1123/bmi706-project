@@ -60,6 +60,7 @@ elif section == 'Group-wise BMI Comparison':
         y='BMI:Q',
         tooltip=['BMI', category]
     ).properties(
+        height=600,
         title=f'BMI by {category}'
     )
 
@@ -85,6 +86,7 @@ elif section == 'Group-wise BMI Trend over Age':
         y='mean(BMI)',
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
     ).properties(
+        height=600,
         title=f'BMI Trend over Age by {category}'
     ).interactive()
 
