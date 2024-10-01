@@ -125,6 +125,8 @@ elif section == 'Interaction Effects':
     st.title('Interaction Effects')
     st.write('Explore the interaction between Age and Gender on BMI.')
 
+    category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
+
     diff = df['Age'].max() - df['Age'].min()
     domain_min = df['Age'].min() - diff * 0.02
     domain_max = df['Age'].max() + diff * 0.02
@@ -132,7 +134,7 @@ elif section == 'Interaction Effects':
     interaction_plot = alt.Chart(df).mark_circle().encode(
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
-        color='Gender:N',
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10')),
         size='Income Ratio:Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
