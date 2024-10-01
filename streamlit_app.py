@@ -3,6 +3,9 @@ import pandas as pd
 import altair as alt
 
 df = pd.read_csv('./merged_clean_data.csv')
+df['Gender'] = df['Gender'].replace({1: 'Male', 2: 'Female'})
+df['Race'] = df['Race'].replace({1: 'Mexican American', 2: 'Other Hispanic', 3: 'Non-Hispanic White', 4: 'Non-Hispanic Black', 6: 'Non-Hispanic Asian', 7: 'Other'})
+df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 'Refused', 9: 'Don\'t Know'})
 
 # Sidebar for navigation
 st.sidebar.title('Analysis Dashboard')
@@ -69,6 +72,8 @@ elif section == 'Group-wise BMI Trend over Age':
         x='Age',  # Age on x-axis
         y='mean(BMI)',
         color=category + ':O'  # Color lines by Gender
+    ).properties(
+        title=f'BMI Trend over Age by {category}'
     ).interactive()
 
     st.altair_chart(line_chart, use_container_width=True)
