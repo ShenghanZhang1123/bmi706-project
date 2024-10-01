@@ -11,7 +11,7 @@ df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 
 st.set_page_config(layout="wide")
 st.sidebar.title('Analysis Dashboard')
 section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison', 'Group-wise BMI Trend over Age', 'Regression Analysis',
-                                               'Interaction Effects'])
+                                               'BMI Distribution'])
 
 # Page 1: Home
 if section == 'Home':
