@@ -126,7 +126,7 @@ elif section == 'BMI Distribution':
     st.write('Customize the distribution plot based on both categorical and continuous variables.')
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
-    continuous = st.selectbox('Select continuous variable:', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
+    continuous = st.selectbox('Select continuous variable:', ['Income Ratio', 'LDL', 'Blood Pressure'])
 
     # Multiselect to choose which specific categories to display
     selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
@@ -148,7 +148,7 @@ elif section == 'BMI Distribution':
         size=continuous + ':Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
-        height=600,
+        height=500,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
