@@ -6,7 +6,7 @@ df = pd.read_csv('./merged_clean_data.csv')
 
 # Sidebar for navigation
 st.sidebar.title('Analysis Dashboard')
-section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI', 'Regression Analysis',
+section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI', 'Group-wise BMI Trend over Age', 'Regression Analysis',
                                                'Interaction Effects'])
 
 # Page 1: Home
