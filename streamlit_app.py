@@ -42,8 +42,12 @@ elif section == 'Correlation Analysis':
     # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
 
+    diff = df[variable].max() - df[variable].min()
+    domain_min = df[variable].min() - diff * 0.02
+    domain_max = df[variable].max() + diff * 0.02
+
     scatter_chart = alt.Chart(df).mark_circle(size=60).encode(
-        x=variable,
+        x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI',
         tooltip=[variable, 'BMI']
     ).interactive()
