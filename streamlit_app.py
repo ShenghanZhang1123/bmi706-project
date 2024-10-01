@@ -148,7 +148,7 @@ elif section == 'BMI Distribution':
         size=continuous + ':Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
-        height=500,
+        height=550,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
