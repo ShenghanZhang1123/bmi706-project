@@ -121,11 +121,12 @@ elif section == 'Regression Analysis':
     st.altair_chart(regression_chart, use_container_width=True)
 
 # Page 5: Interaction Effects
-elif section == 'Interaction Effects':
-    st.title('Interaction Effects')
-    st.write('Explore the interaction between Age and Gender on BMI.')
+elif section == 'BMI Distribution':
+    st.title('BMI Distribution Analysis')
+    st.write('Customize the distribution plot based on both categorical and continuous variables.')
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
+    continuous = st.selectbox('Select continuous variable:', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
 
     # Multiselect to choose which specific categories to display
     selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
@@ -144,7 +145,7 @@ elif section == 'Interaction Effects':
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10')),
-        size='Income Ratio:Q',
+        size=continuous + ':Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
         height=600,
