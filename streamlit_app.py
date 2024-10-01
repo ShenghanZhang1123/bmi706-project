@@ -77,7 +77,8 @@ elif section == 'Regression Analysis':
         y=alt.Y('BMI', type='quantitative'),
     ).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
-        y='BMI'
+        y='BMI',
+        color=alt.value('red')
     )
 
     st.altair_chart(regression_chart, use_container_width=True)
