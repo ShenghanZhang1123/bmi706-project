@@ -69,11 +69,20 @@ elif section == 'Group-wise BMI Trend over Age':
     st.write('Plot the BMI Trend over Age across different categories')
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
-    # Group by Gender (assuming the column for Gender is 'RIAGENDR')
-    line_chart = alt.Chart(df).mark_line().encode(
+    # Multiselect to choose which specific categories to display
+    selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
+
+    # Filter the dataframe based on selected categories
+    if selected_categories:
+        filtered_df = df[df[category].isin(selected_categories)]
+    else:
+        filtered_df = df  # Show all if none are selected
+
+    # Group by the selected category and plot the trend
+    line_chart = alt.Chart(filtered_df).mark_line().encode(
         x='Age',  # Age on x-axis
         y='mean(BMI)',
-        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Color lines by Gender
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
     ).properties(
         title=f'BMI Trend over Age by {category}'
     ).interactive()
