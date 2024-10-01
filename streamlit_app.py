@@ -124,7 +124,7 @@ elif section == 'Interaction Effects':
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
         width=1600,
-        height=800,
+        height=1600,
         title='Interaction of Age, Gender, and BMI'
     ).interactive()
 
