@@ -8,6 +8,7 @@ df['Race'] = df['Race'].replace({1: 'Mexican American', 2: 'Other Hispanic', 3: 
 df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 'Refused', 9: 'Don\'t Know'})
 
 # Sidebar for navigation
+st.set_page_config(layout="wide")
 st.sidebar.title('Analysis Dashboard')
 section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison', 'Group-wise BMI Trend over Age', 'Regression Analysis',
                                                'Interaction Effects'])
@@ -34,7 +35,7 @@ elif section == 'Correlation Analysis':
         tooltip=['index', 'variable', 'value']
     ).properties(title='Correlation Heatmap')
 
-    st.altair_chart(corr_chart, use_container_width=False)
+    st.altair_chart(corr_chart, use_container_width=True)
 
     # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
@@ -45,7 +46,7 @@ elif section == 'Correlation Analysis':
         tooltip=[variable, 'BMI']
     ).interactive()
 
-    st.altair_chart(scatter_chart, use_container_width=False)
+    st.altair_chart(scatter_chart, use_container_width=True)
 
 # Page 3: Group-wise BMI Analysis (Categorical)
 elif section == 'Group-wise BMI Comparison':
@@ -62,7 +63,7 @@ elif section == 'Group-wise BMI Comparison':
         title=f'BMI by {category}'
     )
 
-    st.altair_chart(boxplot, use_container_width=False)
+    st.altair_chart(boxplot, use_container_width=True)
 
 elif section == 'Group-wise BMI Trend over Age':
     st.title('BMI Trend over Age by Categorical Variables')
@@ -87,7 +88,7 @@ elif section == 'Group-wise BMI Trend over Age':
         title=f'BMI Trend over Age by {category}'
     ).interactive()
 
-    st.altair_chart(line_chart, use_container_width=False)
+    st.altair_chart(line_chart, use_container_width=True)
 
 # Page 4: Regression Analysis
 elif section == 'Regression Analysis':
@@ -109,7 +110,7 @@ elif section == 'Regression Analysis':
         color=alt.value('red')
     )
 
-    st.altair_chart(regression_chart, use_container_width=False)
+    st.altair_chart(regression_chart, use_container_width=True)
 
 # Page 5: Interaction Effects
 elif section == 'Interaction Effects':
