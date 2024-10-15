@@ -3,36 +3,6 @@ import pandas as pd
 import altair as alt
 import numpy as np
 
-
-def point_biserial_corr_pval(bmi, race_binary):
-    # Group means
-    M1 = bmi[race_binary == 1].mean()
-    M0 = bmi[race_binary == 0].mean()
-
-    # Group sizes
-    n1 = (race_binary == 1).sum()
-    n0 = (race_binary == 0).sum()
-    n = len(bmi)
-
-    # Pooled standard deviation
-    s1 = bmi[race_binary == 1].std(ddof=1)
-    s0 = bmi[race_binary == 0].std(ddof=1)
-    sp = np.sqrt(((n1 - 1) * s1 ** 2 + (n0 - 1) * s0 ** 2) / (n1 + n0 - 2))
-
-    # Point biserial correlation formula
-    r_pb = (M1 - M0) / bmi.std(ddof=1) * np.sqrt((n1 * n0) / (n * (n - 1)))
-
-    # T-statistic for two-sample t-test
-    t_stat = (M1 - M0) / (sp * np.sqrt(1 / n1 + 1 / n0))
-
-    # Degrees of freedom for t-test
-    df = n1 + n0 - 2
-
-    # Calculate the two-tailed p-value from the t-statistic using the survival function
-    p_value = 2 * (1 - np.abs(np.arctan(t_stat / np.sqrt(df))))
-
-    return r_pb, p_value
-
 df = pd.read_csv('./merged_clean_data.csv')
 df['Gender'] = df['Gender'].replace({1: 'Male', 2: 'Female'})
 df['Race'] = df['Race'].replace({1: 'Mexican American', 2: 'Other Hispanic', 3: 'Non-Hispanic White', 4: 'Non-Hispanic Black', 6: 'Non-Hispanic Asian', 7: 'Other'})
@@ -110,67 +80,30 @@ elif section == 'Group-wise BMI Comparison':
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
-    boxplot = alt.Chart(df).mark_boxplot().encode(
-        x=category + ':O',
-        y='BMI:Q',
-        tooltip=['BMI', category]
-    ).properties(
+    # Calculate mean and standard deviation for BMI per race
+    bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
+
+    # Bar plot with error bars
+    bar = alt.Chart(bmi_stats).mark_bar().encode(
+        x=alt.X(f'{category}:N', title=category),
+        y=alt.Y('mean:Q', title='Mean BMI')
+    )
+
+    error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
+        x=alt.X(f'{category}:N'),
+        y=alt.Y('mean:Q'),
+        yError='std:Q'
+    )
+
+    # Combine the bar chart with error bars
+    bar_with_error = bar + error_bars
+
+    bar_with_error.properties(
         height=600,
         title=f'BMI by {category}'
     )
 
-    st.altair_chart(boxplot, use_container_width=True)
-
-    # List to store results
-    results = []
-
-    # Calculate point biserial correlation for each race group
-    unique_cases = df[category].unique()
-
-    for case in unique_cases:
-        # Create a binary variable: 1 if the person is in the current race, 0 otherwise
-        binary_case = (df[category] == case).astype(int)
-
-        # Calculate the point biserial correlation between BMI and the binary race variable
-        correlation, p_value = point_biserial_corr_pval(df['BMI'], binary_case)
-
-        # Append the result for this race group
-        results.append({
-            category: case,
-            'Correlation': correlation,
-            'P-value': p_value
-        })
-
-    # Convert results into a DataFrame
-    results_df = pd.DataFrame(results)
-
-    # Display the results in Streamlit
-    st.write("Point Biserial Correlation by Race")
-    st.dataframe(results_df)
-
-    # Create a bar chart using Altair to visualize the correlation scores
-    chart = alt.Chart(results_df).mark_bar().encode(
-        x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('Correlation:Q', title='Point Biserial Correlation'),
-        color=f'{category}:N'
-    ).properties(
-        title=f'Point Biserial Correlation for Each {category}'
-    )
-
-    # Display the Altair chart in Streamlit
-    st.altair_chart(chart, use_container_width=True)
-
-    # Create a bar chart using Altair to visualize the p-values
-    p_value_chart = alt.Chart(results_df).mark_bar().encode(
-        x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('P-value:Q', title='P-value'),
-        color=f'{category}:N'
-    ).properties(
-        title=f'P-values for Each {category}'
-    )
-
-    # Display the Altair chart in Streamlit
-    st.altair_chart(p_value_chart, use_container_width=True)
+    st.altair_chart(bar_with_error, use_container_width=True)
 
 elif section == 'Group-wise BMI Trend over Age':
     st.title('BMI Trend over Age by Categorical Variables')
