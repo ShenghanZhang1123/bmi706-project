@@ -117,8 +117,8 @@ elif section == 'Group-wise BMI Comparison':
         # Adding jitter to avoid overlap
         jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
     ).encode(
-        x=alt.X(f'{category}:N', title=category, axis=alt.Axis(labelAngle=0)),
-        y=alt.Y('BMI:Q', title='BMI', scale=alt.Scale(zero=False)),
+        x=alt.X(f'{category}:N', title=category),
+        y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
     ).interactive()
 
