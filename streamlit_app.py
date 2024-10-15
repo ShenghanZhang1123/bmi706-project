@@ -168,7 +168,7 @@ elif section == 'BMI Age Distribution':
     line_plot = alt.Chart(filtered_df).mark_line(strokeWidth=3).encode(
         x=alt.X('Age'),  # Age on x-axis
         y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[15, 60])),  # BMI on y-axis
-        color=alt.Color(category + ':O', scale=alt.Scale(scheme='set1'))  # Apply distinct colors
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='purpleblue'))  # Apply distinct colors
     ).properties(
         height=550
     ).interactive()
