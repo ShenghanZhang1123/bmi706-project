@@ -25,6 +25,8 @@ if section == 'Home':
 
 # Page 2: Correlation Analysis
 elif section == 'Correlation Analysis':
+    # Create two columns
+    col1, col2 = st.columns(2)
     st.title('Correlation Analysis')
     st.write('Explore the relationships between BMI and other continuous variables.')
 
@@ -41,7 +43,8 @@ elif section == 'Correlation Analysis':
         tooltip=['index', 'variable', 'value']
     ).properties(title='Correlation Heatmap', height=600, width=600)
 
-    st.altair_chart(corr_chart)
+    with col1:
+        st.altair_chart(corr_chart)
 
     diff = df[variable].max() - df[variable].min()
     domain_min = df[variable].min() - diff * 0.02
@@ -59,7 +62,8 @@ elif section == 'Correlation Analysis':
         color=alt.value('red')
     ).properties(height=600, width=600).interactive()
 
-    st.altair_chart(regression_chart)
+    with col2:
+        st.altair_chart(regression_chart)
 
 # Page 3: Group-wise BMI Analysis (Categorical)
 elif section == 'Group-wise BMI Comparison':
