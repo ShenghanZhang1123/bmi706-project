@@ -111,7 +111,8 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI')
     ).properties(
-        title='Strip Plot of BMI by Race'
+        height=600,
+        title=f'Strip Plot of BMI by {category}'
     ).transform_calculate(
         # Adding jitter to avoid overlap
         jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
