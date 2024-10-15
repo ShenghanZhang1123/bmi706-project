@@ -29,11 +29,11 @@ elif section == 'Correlation Analysis':
     st.title('Correlation Analysis')
     st.write('Explore the relationships between BMI and other continuous variables.')
 
-    col1, col2 = st.columns(2)
-
     # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
                             ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
+
+    col1, col2 = st.columns(2)
 
     # Correlation heatmap using Altair
     corr = df[['BMI', variable]].corr().reset_index().melt('index')
