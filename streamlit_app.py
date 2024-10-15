@@ -158,7 +158,7 @@ elif section == 'BMI Age Distribution':
     scatter_plot = alt.Chart(filtered_df).mark_circle().encode(
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
-        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10')),
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category20')),
         size=continuous + ':Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
