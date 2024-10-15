@@ -104,14 +104,10 @@ elif section == 'Group-wise BMI Trend over Age':
     else:
         filtered_df = df  # Show all if none are selected
 
-    diff_y = filtered_df['BMI'].max() - filtered_df['BMI'].min()
-    domain_min_y = filtered_df['BMI'].min() - diff_y * 0.02
-    domain_max_y = filtered_df['BMI'].max() + diff_y * 0.02
-
     # Group by the selected category and plot the trend
     line_chart = alt.Chart(filtered_df).mark_line().encode(
         x=alt.X('Age'),  # Age on x-axis
-        y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[domain_min_y, 60])),  # BMI on y-axis
+        y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[15, 50])),  # BMI on y-axis
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
     ).properties(
         height=500,
