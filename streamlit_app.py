@@ -80,6 +80,8 @@ elif section == 'Group-wise BMI Comparison':
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
+    col1, col2 = st.columns(2)
+
     # Calculate mean and standard deviation for BMI per race
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
@@ -91,7 +93,7 @@ elif section == 'Group-wise BMI Comparison':
 
     error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
         x=alt.X(f'{category}:N'),
-        y=alt.Y('mean:Q'),
+        y=alt.Y('mean:Q', title='Standard Deviation'),
         yError='std:Q'
     )
 
@@ -103,7 +105,8 @@ elif section == 'Group-wise BMI Comparison':
         title=f'BMI by {category}'
     )
 
-    st.altair_chart(bar_with_error, use_container_width=True)
+    with col1:
+        st.altair_chart(bar_with_error, use_container_width=True)
 
 elif section == 'Group-wise BMI Trend over Age':
     st.title('BMI Trend over Age by Categorical Variables')
