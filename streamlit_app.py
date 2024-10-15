@@ -155,7 +155,7 @@ elif section == 'BMI Age Distribution':
     domain_min = df['Age'].min() - diff * 0.02
     domain_max = df['Age'].max() + diff * 0.02
 
-    scatter_plot = alt.Chart(filtered_df).mark_circle().encode(
+    scatter_plot = alt.Chart(filtered_df).mark_circle(opacity=0.7).encode(
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10')),
@@ -165,7 +165,7 @@ elif section == 'BMI Age Distribution':
         height=550
     ).interactive()
 
-    line_plot = alt.Chart(filtered_df).mark_line().encode(
+    line_plot = alt.Chart(filtered_df).mark_line(strokeWidth=3).encode(
         x=alt.X('Age'),  # Age on x-axis
         y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[15, 60])),  # BMI on y-axis
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
@@ -180,6 +180,6 @@ elif section == 'BMI Age Distribution':
         st.altair_chart(line_plot, use_container_width=True)
     else:
         # Combine both scatter and line plot
-        st.altair_chart(scatter_plot, use_container_width=True)
-        st.altair_chart(line_plot, use_container_width=True)
+        combined_plot = scatter_plot + line_plot
+        st.altair_chart(combined_plot, use_container_width=True)
 
