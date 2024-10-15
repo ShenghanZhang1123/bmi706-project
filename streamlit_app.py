@@ -10,7 +10,7 @@ df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 
 # Sidebar for navigation
 st.set_page_config(layout="wide")
 st.sidebar.title('Analysis Dashboard')
-section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison', 'Group-wise BMI Trend over Age', 'Regression Analysis',
+section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison', 'Group-wise BMI Trend over Age',
                                                'BMI Distribution'])
 
 # Page 1: Home
@@ -28,8 +28,12 @@ elif section == 'Correlation Analysis':
     st.title('Correlation Analysis')
     st.write('Explore the relationships between BMI and other continuous variables.')
 
+    # Scatter plot with dropdown for variable selection
+    variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
+                            ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
+
     # Correlation heatmap using Altair
-    corr = df[['BMI', 'Age', 'Income Ratio', 'LDL', 'Blood Pressure']].corr().reset_index().melt('index')
+    corr = df[['BMI', variable]].corr().reset_index().melt('index')
     corr_chart = alt.Chart(corr).mark_rect().encode(
         x='index:O',
         y='variable:O',
@@ -39,20 +43,23 @@ elif section == 'Correlation Analysis':
 
     st.altair_chart(corr_chart, use_container_width=True)
 
-    # Scatter plot with dropdown for variable selection
-    variable = st.selectbox('Select variable to plot against BMI', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
-
     diff = df[variable].max() - df[variable].min()
     domain_min = df[variable].min() - diff * 0.02
     domain_max = df[variable].max() + diff * 0.02
 
-    scatter_chart = alt.Chart(df).mark_circle(size=60).encode(
-        x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
-        y='BMI',
-        tooltip=[variable, 'BMI']
-    ).interactive()
+    st.title('Regression Analysis')
+    st.write('Perform linear regression to see how multiple factors affect BMI.')
 
-    st.altair_chart(scatter_chart, use_container_width=True)
+    regression_chart = alt.Chart(df).mark_point().encode(
+        x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
+        y=alt.Y('BMI', type='quantitative'),
+    ).properties(height=600).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
+        x=variable,
+        y='BMI',
+        color=alt.value('red')
+    ).properties(height=600).interactive()
+
+    st.altair_chart(regression_chart, use_container_width=True)
 
 # Page 3: Group-wise BMI Analysis (Categorical)
 elif section == 'Group-wise BMI Comparison':
@@ -98,33 +105,7 @@ elif section == 'Group-wise BMI Trend over Age':
 
     st.altair_chart(line_chart, use_container_width=True)
 
-# Page 4: Regression Analysis
-elif section == 'Regression Analysis':
-    st.title('Regression Analysis')
-    st.write('Perform linear regression to see how multiple factors affect BMI.')
-
-    st.write(
-        'Note: For simplicity, we are not performing a full regression here, but visualizing linear relationships.')
-
-    # Regression-like scatter plot with trend line
-    variable = st.selectbox('Select variable for regression plot:', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
-
-    diff = df[variable].max() - df[variable].min()
-    domain_min = df[variable].min() - diff * 0.02
-    domain_max = df[variable].max() + diff * 0.02
-
-    regression_chart = alt.Chart(df).mark_point().encode(
-        x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
-        y=alt.Y('BMI', type='quantitative'),
-    ).properties(height=600).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
-        x=variable,
-        y='BMI',
-        color=alt.value('red')
-    ).properties(height=600).interactive()
-
-    st.altair_chart(regression_chart, use_container_width=True)
-
-# Page 5: Interaction Effects
+# Page 4: Interaction Effects
 elif section == 'BMI Distribution':
     st.title('BMI Distribution Analysis')
     st.write('Customize the distribution plot based on both categorical and continuous variables.')
