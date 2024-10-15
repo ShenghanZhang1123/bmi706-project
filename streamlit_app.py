@@ -139,8 +139,11 @@ elif section == 'BMI Age Distribution':
         ('Scatter Plot', 'Line Plot'), horizontal=True
     )
 
-    category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
-    continuous = st.selectbox('Select continuous variable:', ['Income Ratio', 'LDL', 'Blood Pressure'])
+    col1, col2 = st.columns(2)
+    with col1:
+        category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
+    with col2:
+        continuous = st.selectbox('Select continuous variable:', ['Income Ratio', 'LDL', 'Blood Pressure'])
 
     # Multiselect to choose which specific categories to display
     selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
