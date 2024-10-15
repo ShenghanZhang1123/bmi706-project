@@ -158,7 +158,7 @@ elif section == 'BMI Age Distribution':
     scatter_plot = alt.Chart(filtered_df).mark_circle().encode(
         x=alt.X('Age:Q', scale=alt.Scale(domain=[domain_min, domain_max])),
         y='BMI:Q',
-        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category20')),
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10')),
         size=continuous + ':Q',
         tooltip=['Age', 'BMI', 'Gender', 'Income Ratio']
     ).properties(
@@ -180,6 +180,6 @@ elif section == 'BMI Age Distribution':
         st.altair_chart(line_plot, use_container_width=True)
     else:
         # Combine both scatter and line plot
-        combined_plot = scatter_plot + line_plot
-        st.altair_chart(combined_plot, use_container_width=True)
+        st.altair_chart(scatter_plot, use_container_width=True)
+        st.altair_chart(line_plot, use_container_width=True)
 
