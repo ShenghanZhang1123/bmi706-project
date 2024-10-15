@@ -33,7 +33,7 @@ elif section == 'Correlation Analysis':
     variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
                             ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
 
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 2])
 
     # Correlation heatmap using Altair
     corr = df[['BMI', variable]].corr().reset_index().melt('index')
@@ -58,7 +58,7 @@ elif section == 'Correlation Analysis':
         x=variable,
         y='BMI',
         color=alt.value('red')
-    ).properties(height=600, width=600).interactive()
+    ).properties(height=600, width=800).interactive()
 
     with col2:
         st.altair_chart(regression_chart)
