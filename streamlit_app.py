@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+from scipy.stats import pointbiserialr
 
 df = pd.read_csv('./merged_clean_data.csv')
 df['Gender'] = df['Gender'].replace({1: 'Male', 2: 'Female'})
@@ -89,6 +90,45 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     st.altair_chart(boxplot, use_container_width=True)
+
+    # List to store results
+    results = []
+
+    # Calculate point biserial correlation for each race group
+    unique_cases = df[category].unique()
+
+    for case in unique_cases:
+        # Create a binary variable: 1 if the person is in the current race, 0 otherwise
+        binary_case = (df[category] == case).astype(int)
+
+        # Calculate the point biserial correlation between BMI and the binary race variable
+        correlation, p_value = pointbiserialr(df['BMI'], binary_case)
+
+        # Append the result for this race group
+        results.append({
+            category: case,
+            'Correlation': correlation,
+            'P-value': p_value
+        })
+
+    # Convert results into a DataFrame
+    results_df = pd.DataFrame(results)
+
+    # Display the results in Streamlit
+    st.write("Point Biserial Correlation by Race")
+    st.dataframe(results_df)
+
+    # Create a bar chart using Altair to visualize the correlation scores
+    chart = alt.Chart(results_df).mark_bar().encode(
+        x=alt.X('Race:N', title='Race'),
+        y=alt.Y('Correlation:Q', title='Point Biserial Correlation'),
+        color='Race:N'
+    ).properties(
+        title='Point Biserial Correlation for Each Race'
+    )
+
+    # Display the Altair chart in Streamlit
+    st.altair_chart(chart, use_container_width=True)
 
 elif section == 'Group-wise BMI Trend over Age':
     st.title('BMI Trend over Age by Categorical Variables')
