@@ -88,7 +88,8 @@ elif section == 'Group-wise BMI Comparison':
     # Bar plot with error bars
     bar = alt.Chart(bmi_stats).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('mean:Q', title='Mean BMI')
+        y=alt.Y('mean:Q', title='Mean BMI'),
+        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
     )
 
     error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
