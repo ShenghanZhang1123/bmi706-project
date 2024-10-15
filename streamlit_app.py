@@ -26,9 +26,10 @@ if section == 'Home':
 # Page 2: Correlation Analysis
 elif section == 'Correlation Analysis':
     # Create two columns
-    col1, col2 = st.columns(2)
     st.title('Correlation Analysis')
     st.write('Explore the relationships between BMI and other continuous variables.')
+
+    col1, col2 = st.columns(2)
 
     # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
@@ -50,13 +51,10 @@ elif section == 'Correlation Analysis':
     domain_min = df[variable].min() - diff * 0.02
     domain_max = df[variable].max() + diff * 0.02
 
-    st.title('Regression Analysis')
-    st.write('Perform linear regression to see how multiple factors affect BMI.')
-
     regression_chart = alt.Chart(df).mark_point().encode(
         x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
         y=alt.Y('BMI', type='quantitative'),
-    ).properties(height=600, width=600).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
+    ).properties(title='Regression Analysis', height=600, width=600).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
         y='BMI',
         color=alt.value('red')
