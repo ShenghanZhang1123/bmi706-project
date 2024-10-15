@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from scipy.stats import pointbiserialr
 
 df = pd.read_csv('./merged_clean_data.csv')
 df['Gender'] = df['Gender'].replace({1: 'Male', 2: 'Female'})
