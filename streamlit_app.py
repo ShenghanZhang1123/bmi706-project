@@ -39,7 +39,7 @@ elif section == 'Correlation Analysis':
         y='variable:O',
         color='value:Q',
         tooltip=['index', 'variable', 'value']
-    ).properties(title='Correlation Heatmap', height=200, width=200)
+    ).properties(title='Correlation Heatmap', height=600, width=600)
 
     st.altair_chart(corr_chart)
 
@@ -53,11 +53,11 @@ elif section == 'Correlation Analysis':
     regression_chart = alt.Chart(df).mark_point().encode(
         x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
         y=alt.Y('BMI', type='quantitative'),
-    ).properties(height=400, width=400).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
+    ).properties(height=600, width=600).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
         y='BMI',
         color=alt.value('red')
-    ).properties(height=400, width=400).interactive()
+    ).properties(height=600, width=600).interactive()
 
     st.altair_chart(regression_chart)
 
