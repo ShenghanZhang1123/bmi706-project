@@ -42,7 +42,7 @@ elif section == 'Correlation Analysis':
         y='variable:O',
         color='value:Q',
         tooltip=['index', 'variable', 'value']
-    ).properties(title='Correlation Heatmap', height=500)
+    ).properties(title='Correlation Heatmap', height=500, width=500)
 
     with col1:
         st.altair_chart(corr_chart)
@@ -61,7 +61,7 @@ elif section == 'Correlation Analysis':
     ).properties(height=600).interactive()
 
     with col2:
-        st.altair_chart(regression_chart)
+        st.altair_chart(regression_chart, use_container_width=True)
 
 # Page 3: Group-wise BMI Analysis (Categorical)
 elif section == 'Group-wise BMI Comparison':
