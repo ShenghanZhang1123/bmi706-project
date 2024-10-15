@@ -58,7 +58,7 @@ elif section == 'Correlation Analysis':
         x=variable,
         y='BMI',
         color=alt.value('red')
-    ).properties(height=600, width=600).interactive()
+    ).properties(height=600, width=800).interactive()
 
     with col2:
         st.altair_chart(regression_chart)
