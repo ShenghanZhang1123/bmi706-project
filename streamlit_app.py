@@ -110,7 +110,7 @@ elif section == 'Group-wise BMI Trend over Age':
         y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[15, 50])),  # BMI on y-axis
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
     ).properties(
-        height=500,
+        height=300,
         title=f'BMI Trend over Age by {category}'
     ).interactive()
 
