@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import numpy as np
 
 def point_biserial_corr_pval(bmi, race_binary):
     # Group means
