@@ -52,13 +52,17 @@ elif section == 'Correlation Analysis':
     with col1:
         st.altair_chart(corr_chart)
 
+    diff_y = df['BMI'].max() - df['BMI'].min()
+    domain_min_y = df['BMI'].min() - diff_y * 0.02
+    domain_max_y = df['BMI'].max() + diff_y * 0.02
+
     diff = df[variable].max() - df[variable].min()
     domain_min = df[variable].min() - diff * 0.02
     domain_max = df[variable].max() + diff * 0.02
 
     regression_chart = alt.Chart(df).mark_point().encode(
         x=alt.X(variable, type='quantitative', scale=alt.Scale(domain=[domain_min, domain_max])),
-        y=alt.Y('BMI', type='quantitative'),
+        y=alt.Y('BMI', type='quantitative', scale=alt.Scale(domain=[domain_min_y, domain_max_y])),
     ).properties(title='Regression Analysis', height=600, width=600).interactive() + alt.Chart(df).transform_regression(variable, 'BMI').mark_line().encode(
         x=variable,
         y='BMI',
@@ -100,10 +104,14 @@ elif section == 'Group-wise BMI Trend over Age':
     else:
         filtered_df = df  # Show all if none are selected
 
+    diff_y = df['BMI'].max() - df['BMI'].min()
+    domain_min_y = df['BMI'].min() - diff_y * 0.02
+    domain_max_y = df['BMI'].max() + diff_y * 0.02
+
     # Group by the selected category and plot the trend
     line_chart = alt.Chart(filtered_df).mark_line().encode(
-        x='Age',  # Age on x-axis
-        y='mean(BMI)',
+        x=alt.X('Age'),  # Age on x-axis
+        y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[domain_min_y, domain_max_y])),  # BMI on y-axis
         color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
     ).properties(
         height=500,
