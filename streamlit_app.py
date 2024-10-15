@@ -106,8 +106,26 @@ elif section == 'Group-wise BMI Comparison':
         title=f'BMI by {category}'
     )
 
+    # Strip plot with jitter
+    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
+        x=alt.X(f'{category}:N', title=category),
+        y=alt.Y('BMI:Q', title='BMI')
+    ).properties(
+        title='Strip Plot of BMI by Race'
+    ).transform_calculate(
+        # Adding jitter to avoid overlap
+        jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
+    ).encode(
+        x=alt.X(f'{category}:N', title=category, axis=alt.Axis(labelAngle=0)),
+        y=alt.Y('BMI:Q', title='BMI', scale=alt.Scale(zero=False)),
+        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
+    ).interactive()
+
     with col1:
         st.altair_chart(bar_with_error, use_container_width=True)
+
+    with col2:
+        st.altair_chart(strip_plot, use_container_width=True)
 
 elif section == 'Group-wise BMI Trend over Age':
     st.title('BMI Trend over Age by Categorical Variables')
