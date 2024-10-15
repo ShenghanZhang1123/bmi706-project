@@ -33,10 +33,10 @@ elif section == 'Correlation Analysis':
 
     # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
-                            var_set)
+                            sorted(var_set))
 
     # Multiselect to choose which specific categories to display
-    selected_categories = st.multiselect(f'Select additional variables to display:', var_set.difference({variable}))
+    selected_categories = st.multiselect(f'Select additional variables to display:', sorted(var_set.difference({variable})))
 
     col1, col2 = st.columns([1, 2])
 
