@@ -42,7 +42,7 @@ elif section == 'Correlation Analysis':
         y='variable:O',
         color='value:Q',
         tooltip=['index', 'variable', 'value']
-    ).properties(title='Correlation Heatmap', height=600, width=600)
+    ).properties(title='Correlation Heatmap', height=500, width=500)
 
     with col1:
         st.altair_chart(corr_chart)
@@ -58,7 +58,7 @@ elif section == 'Correlation Analysis':
         x=variable,
         y='BMI',
         color=alt.value('red')
-    ).properties(height=600, width=800).interactive()
+    ).properties(height=600, width=700).interactive()
 
     with col2:
         st.altair_chart(regression_chart)
