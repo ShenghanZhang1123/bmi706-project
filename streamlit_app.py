@@ -155,8 +155,8 @@ elif section == 'Group-wise BMI Trend over Age':
     st.altair_chart(line_chart, use_container_width=True)
 
 # Page 4: Interaction Effects
-elif section == 'BMI Distribution':
-    st.title('BMI Distribution Analysis')
+elif section == 'BMI Age Distribution':
+    st.title('BMI Age Distribution across Categorical and Continuous Variables')
     st.write('Customize the distribution plot based on both categorical and continuous variables.')
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
