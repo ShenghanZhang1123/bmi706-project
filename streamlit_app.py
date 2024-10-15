@@ -3,6 +3,7 @@ import pandas as pd
 import altair as alt
 import numpy as np
 
+
 def point_biserial_corr_pval(bmi, race_binary):
     # Group means
     M1 = bmi[race_binary == 1].mean()
@@ -27,8 +28,8 @@ def point_biserial_corr_pval(bmi, race_binary):
     # Degrees of freedom for t-test
     df = n1 + n0 - 2
 
-    # Calculate the two-tailed p-value from the t-statistic
-    p_value = 2 * t.cdf(-np.abs(t_stat), df)
+    # Calculate the two-tailed p-value from the t-statistic using the survival function
+    p_value = 2 * (1 - np.abs(np.arctan(t_stat / np.sqrt(df))))
 
     return r_pb, p_value
 
