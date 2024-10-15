@@ -29,12 +29,14 @@ elif section == 'Correlation Analysis':
     st.title('Correlation Analysis')
     st.write('Explore the relationships between BMI and other continuous variables.')
 
+    var_set = {'Age', 'Income Ratio', 'LDL', 'Blood Pressure'}
+
     # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
-                            ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'])
+                            var_set)
 
     # Multiselect to choose which specific categories to display
-    selected_categories = st.multiselect(f'Select additional variables to display:', ['Age', 'Income Ratio', 'LDL', 'Blood Pressure'].remove(variable))
+    selected_categories = st.multiselect(f'Select additional variables to display:', var_set.difference({variable}))
 
     col1, col2 = st.columns([1, 2])
 
