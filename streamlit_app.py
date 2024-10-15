@@ -156,7 +156,7 @@ elif section == 'Group-wise BMI Trend over Age':
 
 # Page 4: Interaction Effects
 elif section == 'BMI Age Distribution':
-    st.title('BMI Age Distribution across Categorical and Continuous Variables')
+    st.title('BMI Age Distribution')
     st.write('Customize the distribution plot based on both categorical and continuous variables.')
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
