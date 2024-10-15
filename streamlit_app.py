@@ -136,7 +136,7 @@ elif section == 'BMI Age Distribution':
     # Streamlit radio button to select the plot type
     plot_type = st.radio(
         "Select visualization type:",
-        ('Scatter Plot', 'Line Plot')
+        ('Scatter Plot', 'Line Plot'), horizontal=True
     )
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
