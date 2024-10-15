@@ -100,8 +100,8 @@ elif section == 'Group-wise BMI Comparison':
     # Combine the bar chart with error bars
     bar_with_error = bar + error_bars
 
-    bar_with_error.properties(
-        height=800,
+    bar_with_error = bar_with_error.properties(
+        height=600,
         title=f'BMI by {category}'
     )
 
