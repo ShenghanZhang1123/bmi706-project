@@ -119,8 +119,6 @@ elif section == 'Group-wise BMI Comparison':
             alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
             alt.value('lightgray')
         )
-    ).transform_filter(
-        selection
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
