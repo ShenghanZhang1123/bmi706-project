@@ -212,9 +212,7 @@ elif section == 'test':
     )
 
     # Strip Chart for Filtered Data Based on Selection
-    strip_chart = alt.Chart(data).transform_filter(
-        selection
-    ).mark_bar().encode(
+    strip_chart = alt.Chart(data).mark_bar().encode(
         x=alt.X(category, title=category),
         y=alt.Y('average(BMI)', title='Average BMI'),
         color=category,
