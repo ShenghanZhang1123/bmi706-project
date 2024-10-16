@@ -84,7 +84,7 @@ elif section == 'Group-wise BMI Comparison':
     # Create a selector to link bar chart and strip plot
     selection = alt.selection_single(
         fields=[category],
-        name='selector',  # Use a descriptive name for the selector
+        name='selection',  # Use a descriptive name for the selector
         clear=False,  # keep selection until explicitly clicked outside
         on='click',
         empty='none'
