@@ -82,19 +82,14 @@ elif section == 'Group-wise BMI Comparison':
 
     # Define a selection
     # Create a selector to link bar chart and strip plot
-    selection = alt.selection_single(
-        fields=[category]
-    )
+    selection = alt.selection_multi(fields=[category], bind='legend')
 
     # Bar plot with error bars and selection
     bar = alt.Chart(bmi_stats).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
-        color=alt.condition(
-            selection,
-            alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
-            alt.value('lightgray')
-        )
+        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).add_selection(
         selection
     )
@@ -112,14 +107,11 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     # Strip plot with jitter and filtering based on selection
-    strip_plot = alt.Chart(df).mark_tick(size=100).encode(
+    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
-        color=alt.condition(
-            selection,
-            alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
-            alt.value('lightgray')
-        )
+        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
