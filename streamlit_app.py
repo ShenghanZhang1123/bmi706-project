@@ -11,7 +11,7 @@ df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 
 st.set_page_config(layout="wide")
 st.sidebar.title('Analysis Dashboard')
 section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison',
-                                               'BMI Age Distribution'])
+                                               'BMI Age Distribution', 'test'])
 
 # Page 1: Home
 if section == 'Home':
@@ -184,4 +184,59 @@ elif section == 'BMI Age Distribution':
         st.altair_chart(scatter_plot, use_container_width=True)
     elif plot_type == 'Line Plot':
         st.altair_chart(line_plot, use_container_width=True)
+elif section == 'test':
+
+    # Simulate a dataframe
+    data = {
+        'Country': ['Country A', 'Country B', 'Country C', 'Country D', 'Country E'],
+        'Year': [2018, 2018, 2018, 2018, 2018],
+        'Rate': np.random.uniform(10, 40, 5),
+        'Population': np.random.randint(1000000, 5000000, 5)
+    }
+    df2 = pd.DataFrame(data)
+
+    # Create a selector to link bar chart and strip plot
+    selector = alt.selection_single(
+        fields=['Country'],
+        name='country_selector',  # Use a descriptive name for the selector
+        clear=False,  # keep selection until explicitly clicked outside
+        on='click',
+        empty='none'
+    )
+
+    # Bar chart showing mortality rate by country
+    bar_chart = alt.Chart(df2).mark_bar().encode(
+        x=alt.X('Country:N', sort='-y', title='Country'),
+        y=alt.Y('Rate:Q', title='Cancer Mortality Rate per 100,000'),
+        color=alt.condition(selector, alt.ColorValue('orange'), alt.ColorValue('lightgray')),
+        tooltip=["Country:N", "Rate:Q"]
+    ).properties(
+        width=600,
+        height=300,
+        title=f'Cancer Mortality Rate by Country (2018)'
+    ).add_selection(
+        selector
+    )
+
+    # Strip plot showing mortality rate distribution across all countries, highlighting the selected country
+    strip_plot = alt.Chart(df2).mark_tick().encode(
+        y=alt.Y('Rate:Q', title='Cancer Mortality Rate per 100,000'),
+        x=alt.X('Country:N', title='Country', sort='-y'),
+        color=alt.condition(selector, alt.Color('Country:N', legend=None), alt.value('lightgray')),
+        tooltip=["Country:N", "Rate:Q"]
+    ).transform_filter(
+        selector
+    ).properties(
+        width=600,
+        height=100,
+        title=f'Mortality Rate Distribution Among Countries (2018)'
+    )
+
+    # Concatenate the bar chart and strip plot vertically
+    chart = alt.vconcat(
+        bar_chart,
+        strip_plot
+    )
+
+    st.altair_chart(chart, use_container_width=True)
 
