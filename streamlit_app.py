@@ -110,8 +110,6 @@ elif section == 'Group-wise BMI Comparison':
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
-    ).transform_filter(
-        selection
     )
 
     with col1:
