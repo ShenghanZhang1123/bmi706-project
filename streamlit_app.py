@@ -135,11 +135,11 @@ elif section == 'BMI Age Distribution':
 
     col1, col2 = st.columns(2)
     with col1:
-        category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
+        category = st.selectbox('Select category:', ['Diabetes', 'Gender', 'Race'])
     with col2:
         continuous = st.selectbox('Select continuous variable:', ['Income Ratio', 'LDL', 'Blood Pressure'])
 
-    selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
+    selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique(), default=df[category].unique()[1:])
 
     if selected_categories:
         filtered_df = df[df[category].isin(selected_categories)]
