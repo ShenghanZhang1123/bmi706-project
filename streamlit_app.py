@@ -103,7 +103,7 @@ elif section == 'Group-wise BMI Comparison':
         title=f'BMI by {category}'
     )
 
-    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
+    strip_plot = alt.Chart(df).mark_bar(size=100).encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
