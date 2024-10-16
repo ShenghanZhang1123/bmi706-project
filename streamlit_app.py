@@ -101,6 +101,7 @@ elif section == 'Group-wise BMI Comparison':
     # Combine the bar chart with error bars
     bar_with_error = (bar + error_bars).properties(
         height=600,
+        width=400,
         title=f'BMI by {category}'
     )
 
@@ -112,6 +113,7 @@ elif section == 'Group-wise BMI Comparison':
         opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).properties(
         height=600,
+        width=400,
         title=f'Strip Plot of BMI by {category}'
     )
 
@@ -119,7 +121,7 @@ elif section == 'Group-wise BMI Comparison':
     linked_views = bar_with_error | strip_plot
 
     # Display the linked charts
-    st.altair_chart(linked_views, use_container_width=True)
+    st.altair_chart(linked_views)
 
 # Page 4: Interaction Effects
 elif section == 'BMI Age Distribution':
