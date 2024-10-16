@@ -73,7 +73,7 @@ elif section == 'Group-wise BMI Comparison':
     st.title('BMI by Categorical Variables')
     st.write('Compare BMI across different categories (Gender, Race, Diabetes).')
 
-    category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
+    category = st.selectbox('Select category:', ['Race', 'Gender', 'Diabetes'])
 
     # Calculate mean and standard deviation for BMI per category
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
