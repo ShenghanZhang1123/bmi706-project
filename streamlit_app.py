@@ -187,63 +187,52 @@ elif section == 'test':
     import altair as alt
     import numpy as np
 
-    # Simulate DataFrame with columns BMI, Race, Gender
+    # Simulating the dataframe
     np.random.seed(42)
-    data = pd.DataFrame({
-        'BMI': np.random.normal(25, 5, 200),
-        'Race': np.random.choice(['Asian', 'Black', 'White', 'Hispanic'], 200),
-        'Gender': np.random.choice(['Male', 'Female'], 200)
+    df = pd.DataFrame({
+        'BMI': np.random.uniform(18, 40, 500),
+        'Race': np.random.choice(['White', 'Black', 'Asian', 'Hispanic'], 500),
+        'Gender': np.random.choice(['Male', 'Female'], 500)
     })
 
-    # Streamlit App
-    st.title('BMI Visualization with Linked Views')
+    # Streamlit layout
+    st.title("BMI Distribution by Race and Gender")
 
-    # Selection Box for Categorical Variable
-    category = st.selectbox('Select a Categorical Variable to Display', ['Race', 'Gender'])
+    # Categorical variable selection
+    category = st.selectbox("Select a categorical variable:", ['Race', 'Gender'])
 
-    # Create Interactive Selection
-    selection = alt.selection_multi(fields=[category])
+    # Create a selection object in Altair
+    selection = alt.selection_multi(fields=[category], bind='legend')
 
-    # Bar Chart for BMI vs Selected Categorical Variable
-    bar_chart = alt.Chart(data).mark_bar().encode(
-        x=alt.X(category, title=category),
-        y=alt.Y('average(BMI)', title='Average BMI'),
-        color=category,
-        tooltip=[category, 'average(BMI)']
+    # First view: Histogram of BMI with color encoding based on the selected categorical variable
+    hist_chart = alt.Chart(df).mark_bar().encode(
+        alt.X('BMI:Q', bin=alt.Bin(maxbins=30), title='BMI'),
+        alt.Y('count()', title='Number of People'),
+        alt.Color(f'{category}:N', legend=alt.Legend(title=category)),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).add_selection(
         selection
     ).properties(
-        title=f'Average BMI by {category}',
-        width=500
+        width=400,
+        height=300,
+        title=f"BMI Distribution by {category}"
     )
 
-    # Scatter Plot for BMI vs Another Variable (e.g., Gender) with Link
-    scatter_chart = alt.Chart(data).mark_circle(size=60).encode(
-        x=alt.X('BMI', title='BMI'),
-        y=alt.Y(category, title=category),
-        color=alt.condition(selection, category, alt.value('lightgray')),
-        tooltip=['BMI', category, 'Gender']
-    ).transform_filter(
-        selection
+    # Second view: Bar chart showing counts per category
+    bar_chart = alt.Chart(df).mark_bar().encode(
+        alt.X(f'{category}:N', title=f'{category} Category'),
+        alt.Y('count()', title='Number of People'),
+        alt.Color(f'{category}:N', legend=None),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).properties(
-        title=f'BMI vs {category}',
-        width=500
+        width=400,
+        height=300,
+        title=f"Count of People by {category}"
     )
 
-    # Strip Chart for Filtered Data Based on Selection
-    strip_chart = alt.Chart(data).mark_tick().encode(
-        x=alt.X('BMI', title='BMI'),
-        y=alt.Y(category, title=category),
-        color=alt.condition(selection, category, alt.value('lightgray'))
-    ).transform_filter(
-        selection
-    ).properties(
-        title=f'BMI Distribution for Selected {category} Values',
-        width=500
-    )
+    # Combining both views using Altair's vertical concatenation with linking
+    linked_views = hist_chart & bar_chart
 
-    # Display Charts
-    st.altair_chart(bar_chart, use_container_width=True)
-    st.altair_chart(scatter_chart, use_container_width=True)
-    st.altair_chart(strip_chart, use_container_width=True)
+    # Display the linked charts
+    st.altair_chart(linked_views, use_container_width=True)
 
