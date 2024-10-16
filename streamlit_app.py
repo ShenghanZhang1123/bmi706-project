@@ -81,9 +81,14 @@ elif section == 'Group-wise BMI Comparison':
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
     # Define a selection
-    selection = alt.selection_single(
-    fields=[category]
-)
+    # Create a selector to link bar chart and strip plot
+    selector = alt.selection_single(
+        fields=[category],
+        name='selector',  # Use a descriptive name for the selector
+        clear=False,  # keep selection until explicitly clicked outside
+        on='click',
+        empty='none'
+    )
 
     # Bar plot with error bars and selection
     bar = alt.Chart(bmi_stats).mark_bar().encode(
