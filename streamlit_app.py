@@ -112,7 +112,7 @@ elif section == 'Group-wise BMI Comparison':
         title=f'Strip Plot of BMI by {category}'
     ).transform_filter(
         selection
-    ).interactive()
+    )
 
     with col1:
         st.altair_chart(bar_with_error, use_container_width=True)
