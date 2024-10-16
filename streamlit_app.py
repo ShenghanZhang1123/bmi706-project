@@ -182,81 +182,45 @@ elif section == 'BMI Age Distribution':
         st.altair_chart(line_plot, use_container_width=True)
 
 elif section == 'test':
-    # Simulate a dataframe with BMI, Race, Gender
-    data = {
-        'BMI': np.random.uniform(15, 35, 100),
-        'Race': np.random.choice(
-            ['Mexican American', 'Other Hispanic', 'Non-Hispanic White', 'Non-Hispanic Black', 'Non-Hispanic Asian',
-             'Other'], 100),
-        'Gender': np.random.choice(['Male', 'Female'], 100)
-    }
-    df = pd.DataFrame(data)
+    # Simulate DataFrame with columns BMI, Race, Gender
+    np.random.seed(42)
+    data = pd.DataFrame({
+        'BMI': np.random.normal(25, 5, 200),
+        'Race': np.random.choice(['Asian', 'Black', 'White', 'Hispanic'], 200),
+        'Gender': np.random.choice(['Male', 'Female'], 200)
+    })
 
-    st.title('BMI by Categorical Variables')
-    st.write('Compare BMI across different categories (Gender, Race).')
+    # Streamlit App
+    st.title('BMI Visualization Based on Categorical Variables')
 
-    category = st.selectbox('Select category:', ['Gender', 'Race'])
+    # Selection Box for Categorical Variable
+    category = st.selectbox('Select a Categorical Variable to Display', ['Race', 'Gender'])
 
-    col1, col2 = st.columns(2)
+    # Filter Data Based on Selection
+    category_value = st.selectbox(f'Select {category} to Filter', sorted(data[category].unique()))
+    filtered_data = data[data[category] == category_value]
 
-    # Calculate mean and standard deviation for BMI per category
-    bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
-
-    # Define a selection to link bar chart and strip plot
-    selection = alt.selection_single(
-        fields=[category],
-        name='selection',  # Use a descriptive name for the selector
-        clear=False,  # keep selection until explicitly clicked outside
-        on='click',
-        empty='none'
-    )
-
-    # Bar plot with error bars and selection
-    bar = alt.Chart(bmi_stats).mark_bar().encode(
-        x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('mean:Q', title='Mean BMI'),
-        color=alt.condition(
-            selection,
-            alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
-            alt.value('lightgray')
-        ),
-        tooltip=[f'{category}:N', 'mean:Q', 'std:Q']
-    ).add_selection(
-        selection
-    )
-
-    error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
-        x=alt.X(f'{category}:N'),
-        y=alt.Y('mean:Q', title='Mean BMI'),
-        yError='std:Q'
-    )
-
-    # Combine the bar chart with error bars
-    bar_with_error = (bar + error_bars).properties(
-        height=400,
-        title=f'BMI by {category}'
-    )
-
-    # Strip plot with jitter and filtering based on selection
-    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
-        x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('BMI:Q', title='BMI'),
-        color=alt.condition(
-            selection,
-            alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
-            alt.value('lightgray')
-        ),
-        tooltip=['BMI:Q', f'{category}:N']
-    ).transform_filter(
-        selection
+    # Bar Chart for BMI vs Selected Categorical Variable
+    bar_chart = alt.Chart(data).mark_bar().encode(
+        x=alt.X(category, title=category),
+        y=alt.Y('average(BMI)', title='Average BMI'),
+        color=category
     ).properties(
-        height=400,
-        title=f'Strip Plot of BMI by {category}'
+        title=f'Average BMI by {category}',
+        width=500
     )
 
-    with col1:
-        st.altair_chart(bar_with_error, use_container_width=True)
+    # Strip Chart for Filtered Data
+    strip_chart = alt.Chart(filtered_data).mark_tick().encode(
+        x=alt.X('BMI', title='BMI'),
+        y=alt.Y(category, title=category),
+        color=alt.Color(category, legend=None)
+    ).properties(
+        title=f'BMI Distribution for Selected {category} Value ({category_value})',
+        width=500
+    )
 
-    with col2:
-        st.altair_chart(strip_plot, use_container_width=True)
+    # Display Charts
+    st.altair_chart(bar_chart, use_container_width=True)
+    st.altair_chart(strip_chart, use_container_width=True)
 
