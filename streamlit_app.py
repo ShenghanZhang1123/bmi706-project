@@ -75,8 +75,6 @@ elif section == 'Group-wise BMI Comparison':
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
-    col1, col2 = st.columns(2)
-
     # Calculate mean and standard deviation for BMI per category
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
@@ -88,7 +86,7 @@ elif section == 'Group-wise BMI Comparison':
     bar = alt.Chart(bmi_stats).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
-        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+        color=alt.Color(f'{category}:N', legend=alt.Legend(title=category)),
         opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).add_selection(
         selection
@@ -110,18 +108,18 @@ elif section == 'Group-wise BMI Comparison':
     strip_plot = alt.Chart(df).mark_circle(size=100).encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
-        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+        color=alt.Color(f'{category}:N', legend=None),
         opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
     )
 
-    with col1:
-        st.altair_chart(bar_with_error, use_container_width=True)
+    # Combining both views using Altair's vertical concatenation with linking
+    linked_views = bar_with_error & strip_plot
 
-    with col2:
-        st.altair_chart(strip_plot, use_container_width=True)
+    # Display the linked charts
+    st.altair_chart(linked_views, use_container_width=True)
 
 # Page 4: Interaction Effects
 elif section == 'BMI Age Distribution':
