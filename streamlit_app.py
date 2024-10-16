@@ -182,6 +182,11 @@ elif section == 'BMI Age Distribution':
         st.altair_chart(line_plot, use_container_width=True)
 
 elif section == 'test':
+    import streamlit as st
+    import pandas as pd
+    import altair as alt
+    import numpy as np
+
     # Simulate DataFrame with columns BMI, Race, Gender
     np.random.seed(42)
     data = pd.DataFrame({
@@ -191,14 +196,15 @@ elif section == 'test':
     })
 
     # Streamlit App
-    st.title('BMI Visualization Based on Categorical Variables')
+    st.title('BMI Visualization with Linked Views')
 
     # Selection Box for Categorical Variable
     category = st.selectbox('Select a Categorical Variable to Display', ['Race', 'Gender'])
 
-    # Create Interactive Bar Chart for BMI vs Selected Categorical Variable
-    selection = alt.selection_single(fields=[category])
+    # Create Interactive Selection
+    selection = alt.selection_multi(fields=[category])
 
+    # Bar Chart for BMI vs Selected Categorical Variable
     bar_chart = alt.Chart(data).mark_bar().encode(
         x=alt.X(category, title=category),
         y=alt.Y('average(BMI)', title='Average BMI'),
@@ -211,18 +217,33 @@ elif section == 'test':
         width=500
     )
 
-    # Strip Chart for Filtered Data Based on Selection
-    strip_chart = alt.Chart(data).mark_bar().encode(
-        x=alt.X(category, title=category),
-        y=alt.Y('average(BMI)', title='Average BMI'),
-        color=category,
-        tooltip=[category, 'average(BMI)']
+    # Scatter Plot for BMI vs Another Variable (e.g., Gender) with Link
+    scatter_chart = alt.Chart(data).mark_circle(size=60).encode(
+        x=alt.X('BMI', title='BMI'),
+        y=alt.Y(category, title=category),
+        color=alt.condition(selection, category, alt.value('lightgray')),
+        tooltip=['BMI', category, 'Gender']
+    ).transform_filter(
+        selection
     ).properties(
-        title=f'Average BMI by {category}',
+        title=f'BMI vs {category}',
+        width=500
+    )
+
+    # Strip Chart for Filtered Data Based on Selection
+    strip_chart = alt.Chart(data).mark_tick().encode(
+        x=alt.X('BMI', title='BMI'),
+        y=alt.Y(category, title=category),
+        color=alt.condition(selection, category, alt.value('lightgray'))
+    ).transform_filter(
+        selection
+    ).properties(
+        title=f'BMI Distribution for Selected {category} Values',
         width=500
     )
 
     # Display Charts
     st.altair_chart(bar_chart, use_container_width=True)
+    st.altair_chart(scatter_chart, use_container_width=True)
     st.altair_chart(strip_chart, use_container_width=True)
 
