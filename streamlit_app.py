@@ -111,10 +111,14 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     # Strip plot with jitter and filtering based on selection
-    strip_plot = alt.Chart(df).mark_tick().encode(
+    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
-        color=alt.condition(selection, alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')), alt.value('lightgray')),
+        color=alt.condition(
+            selection,
+            alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+            alt.value('lightgray')
+        )
     ).transform_filter(
         selection
     ).properties(
