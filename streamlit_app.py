@@ -87,7 +87,7 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
         color=alt.Color(f'{category}:N', legend=alt.Legend(title=category)),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
+        opacity=alt.condition(selection, alt.value(1.2), alt.value(0.1))
     ).add_selection(
         selection
     )
@@ -116,7 +116,7 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     # Combining both views using Altair's vertical concatenation with linking
-    linked_views = bar_with_error & strip_plot
+    linked_views = bar_with_error | strip_plot
 
     # Display the linked charts
     st.altair_chart(linked_views, use_container_width=True)
