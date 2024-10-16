@@ -107,6 +107,8 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
+    ).transform_filter(
+        selection
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
