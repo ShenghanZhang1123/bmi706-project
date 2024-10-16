@@ -197,7 +197,7 @@ elif section == 'test':
     category = st.selectbox('Select a Categorical Variable to Display', ['Race', 'Gender'])
 
     # Create Interactive Bar Chart for BMI vs Selected Categorical Variable
-    selection = alt.selection_single(fields=[category], empty='none')
+    selection = alt.selection_single(fields=[category])
 
     bar_chart = alt.Chart(data).mark_bar().encode(
         x=alt.X(category, title=category),
@@ -214,12 +214,13 @@ elif section == 'test':
     # Strip Chart for Filtered Data Based on Selection
     strip_chart = alt.Chart(data).transform_filter(
         selection
-    ).mark_tick().encode(
-        x=alt.X('BMI', title='BMI'),
-        y=alt.Y(category, title=category),
-        color=alt.Color(category, legend=None)
+    ).mark_bar().encode(
+        x=alt.X(category, title=category),
+        y=alt.Y('average(BMI)', title='Average BMI'),
+        color=category,
+        tooltip=[category, 'average(BMI)']
     ).properties(
-        title=f'BMI Distribution for Selected {category} Value',
+        title=f'Average BMI by {category}',
         width=500
     )
 
