@@ -117,13 +117,10 @@ elif section == 'Group-wise BMI Comparison':
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
     ).transform_filter(
         selection
-    ).transform_calculate(
-        # Adding jitter to avoid overlap
-        jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
-    ).interactive()
+    )
 
     with col1:
         st.altair_chart(bar_with_error, use_container_width=True)
