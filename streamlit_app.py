@@ -80,7 +80,7 @@ elif section == 'Group-wise BMI Comparison':
 
     # Define a selection
     # Create a selector to link bar chart and strip plot
-    selection = alt.selection_multi(fields=[category], bind='legend')
+    selection = alt.selection_multi(fields=[category])
 
     # Bar plot with error bars and selection
     bar = alt.Chart(bmi_stats).mark_bar().encode(
