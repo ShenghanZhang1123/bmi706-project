@@ -81,10 +81,14 @@ elif section == 'Group-wise BMI Comparison':
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
     # Define a selection
-    selection = alt.selection_single(fields=[category], empty='all')
+    selection = alt.selection_single(fields=[category])
+
+    chart_base = alt.Chart(bmi_stats).properties(
+        height=600
+    ).add_selection(selection)
 
     # Bar plot with error bars and selection
-    bar = alt.Chart(bmi_stats).mark_bar().encode(
+    bar = chart_base.mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
         color=alt.condition(
@@ -92,11 +96,9 @@ elif section == 'Group-wise BMI Comparison':
             alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
             alt.value('lightgray')
         )
-    ).add_selection(
-        selection
-    )
+    ).transform_filter(selection)
 
-    error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
+    error_bars = chart_base.mark_errorbar().encode(
         x=alt.X(f'{category}:N'),
         y=alt.Y('mean:Q', title='Mean BMI'),
         yError='std:Q'
@@ -109,7 +111,7 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     # Strip plot with jitter and filtering based on selection
-    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
+    strip_plot = chart_base.mark_circle().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
