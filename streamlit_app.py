@@ -114,7 +114,7 @@ elif section == 'Group-wise BMI Comparison':
     strip_plot = alt.Chart(df).mark_tick().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
-        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
+        color=alt.condition(selection, alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')), alt.value('lightgray')),
     ).transform_filter(
         selection
     ).properties(
