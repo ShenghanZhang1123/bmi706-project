@@ -78,7 +78,7 @@ elif section == 'Group-wise BMI Comparison':
     col1, col2 = st.columns(2)
 
     # Calculate mean and standard deviation for BMI per category
-    bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
+    # bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
     # Define a selection
     # Create a selector to link bar chart and strip plot
@@ -91,9 +91,9 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     # Bar plot with error bars and selection
-    bar = alt.Chart(bmi_stats).mark_bar().encode(
+    bar = alt.Chart(df).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('mean:Q', title='Mean BMI'),
+        y=alt.Y('mean(BMI):Q', title='Mean BMI'),
         color=alt.condition(
             selection,
             alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
@@ -103,9 +103,9 @@ elif section == 'Group-wise BMI Comparison':
         selection
     )
 
-    error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
+    error_bars = alt.Chart(df).mark_errorbar().encode(
         x=alt.X(f'{category}:N'),
-        y=alt.Y('mean:Q', title='Mean BMI'),
+        y=alt.Y('mean(BMI):Q', title='Mean BMI'),
         yError='std:Q'
     )
 
@@ -185,15 +185,10 @@ elif section == 'BMI Age Distribution':
     elif plot_type == 'Line Plot':
         st.altair_chart(line_plot, use_container_width=True)
 elif section == 'test':
-
+    category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
     # Simulate a dataframe
-    data = {
-        'Country': ['Country A', 'Country B', 'Country C', 'Country D', 'Country E'],
-        'Year': [2018, 2018, 2018, 2018, 2018],
-        'Rate': np.random.uniform(10, 40, 5),
-        'Population': np.random.randint(1000000, 5000000, 5)
-    }
-    df2 = pd.DataFrame(data)
+    bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
+    df2 = bmi_stats
 
     # Create a selector to link bar chart and strip plot
     selector = alt.selection_single(
@@ -206,7 +201,7 @@ elif section == 'test':
 
     # Bar chart showing mortality rate by country
     bar_chart = alt.Chart(df2).mark_bar().encode(
-        x=alt.X('Country:N', sort='-y', title='Country'),
+        x=alt.X('BMI:N', sort='-y', title='Country'),
         y=alt.Y('Rate:Q', title='Cancer Mortality Rate per 100,000'),
         color=alt.condition(selector, alt.ColorValue('orange'), alt.ColorValue('lightgray')),
         tooltip=["Country:N", "Rate:Q"]
