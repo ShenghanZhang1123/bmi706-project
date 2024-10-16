@@ -8,7 +8,6 @@ df['Gender'] = df['Gender'].replace({1: 'Male', 2: 'Female'})
 df['Race'] = df['Race'].replace({1: 'Mexican American', 2: 'Other Hispanic', 3: 'Non-Hispanic White', 4: 'Non-Hispanic Black', 6: 'Non-Hispanic Asian', 7: 'Other'})
 df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 'Refused', 9: 'Don\'t Know'})
 
-# Sidebar for navigation
 st.set_page_config(layout="wide")
 st.sidebar.title('Analysis Dashboard')
 section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison',
@@ -26,22 +25,18 @@ if section == 'Home':
 
 # Page 2: Correlation Analysis
 elif section == 'Correlation Analysis':
-    # Create two columns
     st.title('Correlation Analysis')
     st.write('Explore the relationships between BMI and other continuous variables.')
 
     var_set = {'Age', 'Income Ratio', 'LDL', 'Blood Pressure'}
 
-    # Scatter plot with dropdown for variable selection
     variable = st.selectbox('Select variable to plot against BMI and conduct linear regression',
                             sorted(var_set))
 
-    # Multiselect to choose which specific categories to display
     selected_categories = st.multiselect(f'Select additional variables to display:', sorted(var_set.difference({variable})))
 
     col1, col2 = st.columns([1, 2])
 
-    # Correlation heatmap using Altair
     corr = df[['BMI', variable]+list(selected_categories)].corr().reset_index().melt('index')
     corr_chart = alt.Chart(corr).mark_rect().encode(
         x='index:O',
@@ -82,20 +77,17 @@ elif section == 'Group-wise BMI Comparison':
 
     col1, col2 = st.columns(2)
 
-    # Calculate mean and standard deviation for BMI per race
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
-    selector = alt.selection_single(
-        # add your code here
-        fields=[category]
-        # ...
-    )
+    selection = alt.selection_single(fields=[category], clear="mouseout", nearest=True)
 
-    # Bar plot with error bars
     bar = alt.Chart(bmi_stats).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
-        color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
+        color=alt.condition(selection, alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+                            alt.value('lightgray'))
+    ).add_selection(
+        selection
     )
 
     error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
@@ -104,29 +96,23 @@ elif section == 'Group-wise BMI Comparison':
         yError='std:Q'
     )
 
-    # Combine the bar chart with error bars
     bar_with_error = bar + error_bars
 
-    bar_with_error = bar_with_error.add_selection(selector).properties(
+    bar_with_error = bar_with_error.properties(
         height=600,
         title=f'BMI by {category}'
     )
 
-    # Strip plot with jitter
     strip_plot = alt.Chart(df).mark_circle(size=100).encode(
-        x=alt.X(f'{category}:N', title=category),
-        y=alt.Y('BMI:Q', title='BMI')
-    ).properties(
-        height=600,
-        title=f'Strip Plot of BMI by {category}'
-    ).transform_calculate(
-        # Adding jitter to avoid overlap
-        jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
-    ).encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
-    ).transform_filter(selector).interactive()
+    ).properties(
+        height=600,
+        title=f'Strip Plot of BMI by {category}'
+    ).transform_filter(
+        selection
+    )
 
     with col1:
         st.altair_chart(bar_with_error, use_container_width=True)
@@ -139,7 +125,6 @@ elif section == 'BMI Age Distribution':
     st.title('BMI Age Distribution')
     st.write('Customize the distribution plot based on both categorical and continuous variables.')
 
-    # Streamlit radio button to select the plot type
     plot_type = st.radio(
         "Select visualization type:",
         ('Scatter Plot', 'Line Plot'), horizontal=True
@@ -151,14 +136,12 @@ elif section == 'BMI Age Distribution':
     with col2:
         continuous = st.selectbox('Select continuous variable:', ['Income Ratio', 'LDL', 'Blood Pressure'])
 
-    # Multiselect to choose which specific categories to display
     selected_categories = st.multiselect(f'Select {category} to display:', df[category].unique())
 
-    # Filter the dataframe based on selected categories
     if selected_categories:
         filtered_df = df[df[category].isin(selected_categories)]
     else:
-        filtered_df = df  # Show all if none are selected
+        filtered_df = df
 
     diff = df['Age'].max() - df['Age'].min()
     domain_min = df['Age'].min() - diff * 0.02
@@ -175,14 +158,13 @@ elif section == 'BMI Age Distribution':
     ).interactive()
 
     line_plot = alt.Chart(filtered_df).mark_line(strokeWidth=3).encode(
-        x=alt.X('Age'),  # Age on x-axis
-        y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[15, 60])),  # BMI on y-axis
-        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))  # Apply distinct colors
+        x=alt.X('Age'),
+        y=alt.Y('mean(BMI)', scale=alt.Scale(domain=[15, 60])),
+        color=alt.Color(category + ':O', scale=alt.Scale(scheme='category10'))
     ).properties(
         height=550
     ).interactive()
 
-    # Display chart based on the selected option
     if plot_type == 'Scatter Plot':
         st.altair_chart(scatter_plot, use_container_width=True)
     elif plot_type == 'Line Plot':
