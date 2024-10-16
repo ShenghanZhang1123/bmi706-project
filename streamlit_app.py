@@ -87,7 +87,7 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
         color=alt.Color(f'{category}:N', legend=alt.Legend(title=category)),
-        opacity=alt.condition(selection, alt.value(1.2), alt.value(0.1))
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.05))
     ).add_selection(
         selection
     )
@@ -110,7 +110,7 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', legend=None),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.05))
     ).properties(
         height=600,
         width=600,
