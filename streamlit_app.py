@@ -85,6 +85,12 @@ elif section == 'Group-wise BMI Comparison':
     # Calculate mean and standard deviation for BMI per race
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
+    selector = alt.selection_single(
+        # add your code here
+        fields=[category]
+        # ...
+    )
+
     # Bar plot with error bars
     bar = alt.Chart(bmi_stats).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
@@ -101,7 +107,7 @@ elif section == 'Group-wise BMI Comparison':
     # Combine the bar chart with error bars
     bar_with_error = bar + error_bars
 
-    bar_with_error = bar_with_error.properties(
+    bar_with_error = bar_with_error.add_selection(selector).properties(
         height=600,
         title=f'BMI by {category}'
     )
@@ -120,7 +126,7 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
-    ).interactive()
+    ).transform_filter(selector).interactive()
 
     with col1:
         st.altair_chart(bar_with_error, use_container_width=True)
