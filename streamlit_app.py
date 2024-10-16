@@ -77,42 +77,51 @@ elif section == 'Group-wise BMI Comparison':
 
     col1, col2 = st.columns(2)
 
+    # Calculate mean and standard deviation for BMI per category
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
 
-    selection = alt.selection_single(fields=[category])
+    # Define a selection
+    selection = alt.selection_single(fields=[category], empty='all')
 
+    # Bar plot with error bars and selection
     bar = alt.Chart(bmi_stats).mark_bar().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
-        color=alt.condition(selection, alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
-                            alt.value('lightgray'))
+        color=alt.condition(
+            selection,
+            alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10')),
+            alt.value('lightgray')
+        )
     ).add_selection(
         selection
     )
 
     error_bars = alt.Chart(bmi_stats).mark_errorbar().encode(
         x=alt.X(f'{category}:N'),
-        y=alt.Y('mean:Q', title='Standard Deviation'),
+        y=alt.Y('mean:Q', title='Mean BMI'),
         yError='std:Q'
     )
 
-    bar_with_error = bar + error_bars
-
-    bar_with_error = bar_with_error.properties(
+    # Combine the bar chart with error bars
+    bar_with_error = (bar + error_bars).properties(
         height=600,
         title=f'BMI by {category}'
     )
 
-    strip_plot = alt.Chart(df).mark_bar(size=100).encode(
+    # Strip plot with jitter and filtering based on selection
+    strip_plot = alt.Chart(df).mark_circle(size=100).encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
     ).transform_filter(
         selection
+    ).transform_calculate(
+        # Adding jitter to avoid overlap
+        jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
     ).properties(
         height=600,
         title=f'Strip Plot of BMI by {category}'
-    )
+    ).interactive()
 
     with col1:
         st.altair_chart(bar_with_error, use_container_width=True)
