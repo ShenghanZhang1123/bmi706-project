@@ -11,7 +11,7 @@ df['Diabetes'] = df['Diabetes'].replace({1: 'Yes', 2: 'No', 3: 'Borderline', 7: 
 st.set_page_config(layout="wide")
 st.sidebar.title('Analysis Dashboard')
 section = st.sidebar.radio('Select Section:', ['Home', 'Correlation Analysis', 'Group-wise BMI Comparison',
-                                               'BMI Age Distribution', 'test'])
+                                               'BMI Age Distribution'])
 
 # Page 1: Home
 if section == 'Home':
@@ -87,7 +87,7 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('mean:Q', title='Mean BMI'),
         color=alt.Color(f'{category}:N', legend=alt.Legend(title=category)),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.05))
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
     ).add_selection(
         selection
     )
@@ -110,7 +110,7 @@ elif section == 'Group-wise BMI Comparison':
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', legend=None),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.05))
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.02))
     ).properties(
         height=600,
         width=600,
@@ -172,59 +172,4 @@ elif section == 'BMI Age Distribution':
         st.altair_chart(scatter_plot, use_container_width=True)
     elif plot_type == 'Line Plot':
         st.altair_chart(line_plot, use_container_width=True)
-
-elif section == 'test':
-    import streamlit as st
-    import pandas as pd
-    import altair as alt
-    import numpy as np
-
-    # Simulating the dataframe
-    np.random.seed(42)
-    df = pd.DataFrame({
-        'BMI': np.random.uniform(18, 40, 500),
-        'Race': np.random.choice(['White', 'Black', 'Asian', 'Hispanic'], 500),
-        'Gender': np.random.choice(['Male', 'Female'], 500)
-    })
-
-    # Streamlit layout
-    st.title("BMI Distribution by Race and Gender")
-
-    # Categorical variable selection
-    category = st.selectbox("Select a categorical variable:", ['Race', 'Gender'])
-
-    # Create a selection object in Altair
-    selection = alt.selection_multi(fields=[category], bind='legend')
-
-    # First view: Histogram of BMI with color encoding based on the selected categorical variable
-    hist_chart = alt.Chart(df).mark_bar().encode(
-        alt.X('BMI:Q', bin=alt.Bin(maxbins=30), title='BMI'),
-        alt.Y('count()', title='Number of People'),
-        alt.Color(f'{category}:N', legend=alt.Legend(title=category)),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
-    ).add_selection(
-        selection
-    ).properties(
-        width=400,
-        height=300,
-        title=f"BMI Distribution by {category}"
-    )
-
-    # Second view: Bar chart showing counts per category
-    bar_chart = alt.Chart(df).mark_bar().encode(
-        alt.X(f'{category}:N', title=f'{category} Category'),
-        alt.Y('count()', title='Number of People'),
-        alt.Color(f'{category}:N', legend=None),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
-    ).properties(
-        width=400,
-        height=300,
-        title=f"Count of People by {category}"
-    )
-
-    # Combining both views using Altair's vertical concatenation with linking
-    linked_views = hist_chart & bar_chart
-
-    # Display the linked charts
-    st.altair_chart(linked_views, use_container_width=True)
 
