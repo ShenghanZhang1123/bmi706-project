@@ -75,7 +75,7 @@ elif section == 'Group-wise BMI Comparison':
 
     category = st.selectbox('Select category:', ['Gender', 'Race', 'Diabetes'])
 
-    #col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
     # Calculate mean and standard deviation for BMI per category
     bmi_stats = df.groupby(category)['BMI'].agg(['mean', 'std']).reset_index()
@@ -111,7 +111,7 @@ elif section == 'Group-wise BMI Comparison':
     )
 
     # Strip plot with jitter and filtering based on selection
-    strip_plot = alt.Chart(df).mark_circle().encode(
+    strip_plot = alt.Chart(df).mark_tick().encode(
         x=alt.X(f'{category}:N', title=category),
         y=alt.Y('BMI:Q', title='BMI'),
         color=alt.Color(f'{category}:N', scale=alt.Scale(scheme='category10'))
@@ -122,8 +122,11 @@ elif section == 'Group-wise BMI Comparison':
         title=f'Strip Plot of BMI by {category}'
     )
 
-    st.altair_chart(bar_with_error, use_container_width=True)
-    st.altair_chart(strip_plot, use_container_width=True)
+    with col1:
+        st.altair_chart(bar_with_error, use_container_width=True)
+
+    with col2:
+        st.altair_chart(strip_plot, use_container_width=True)
 
 # Page 4: Interaction Effects
 elif section == 'BMI Age Distribution':
